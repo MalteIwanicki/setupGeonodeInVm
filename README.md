@@ -6,8 +6,9 @@ Oracle's VirtualBox is needed.<sub><sup>This is not 100% complete and could miss
 * [Setup](#setup)
 * [Test](#test)
 * [Debug](#debug)
-[^](#contents) 
 
+
+[^](#contents) 
 <a name="setup"></a>
 # Setup 
 ## 1. Setup VM
@@ -145,16 +146,16 @@ psql -U postgres
 ALTER USER geonode Superuser;
 ALTER USER geonode_data Superuser;
 ```
-[^](#contents) 
 
+[^](#contents) 
 <a name="test"></a>
 # Test
 ## Execute Tests
 ```console
 ./docker-compose-nfdi4bio.sh exec django manage.py test --failfast
 ```
-[^](#contents) 
 
+[^](#contents) 
 <a name="debug"></a>
 # Debug
 1. Attached the container to VSC

@@ -1,3 +1,4 @@
+<a name="contents"></a>
 # What Is This?
 We need to setup [Geonode](https://geonode.org/) with it's newest version to develop on.
 Oracle's VirtualBox is needed.<sub><sup>This is not 100% complete and could miss some steps.</sup></sub>
@@ -5,9 +6,10 @@ Oracle's VirtualBox is needed.<sub><sup>This is not 100% complete and could miss
 * [Setup](#setup)
 * [Test](#test)
 * [Debug](#debug)
+[^](#contents) 
 
 <a name="setup"></a>
-# Setup
+# Setup 
 ## 1. Setup VM
 In the VM window:
 * Follow installation wizard in VM with an ubuntu 22.04 image
@@ -143,6 +145,7 @@ psql -U postgres
 ALTER USER geonode Superuser;
 ALTER USER geonode_data Superuser;
 ```
+[^](#contents) 
 
 <a name="test"></a>
 # Test
@@ -150,6 +153,7 @@ ALTER USER geonode_data Superuser;
 ```console
 ./docker-compose-nfdi4bio.sh exec django manage.py test --failfast
 ```
+[^](#contents) 
 
 <a name="debug"></a>
 # Debug

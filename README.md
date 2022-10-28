@@ -1,6 +1,6 @@
 # 0. What Is This?
 We need to setup [Geonode](https://geonode.org/) with it's newest version to develop on.
-Oracle's VirtualBox is needed.
+Oracle's VirtualBox is needed.<sub><sup>This is not 100% complete and could miss some steps.</sup></sub>
 
 # 1. Setup VM
 In the VM window:
@@ -27,7 +27,7 @@ VirtualBox > YOurVirtualMqachine > Settings > Network > Advanced > Port Forward 
 # 3. Setup SSH
 In Powershell on host machine:
 ssh config
-```shell
+```console
 cd ~/.ssh
 "
 Host gn
@@ -39,7 +39,7 @@ Host gn
 ```
 
 setup rsa key
-```shell
+```console
 ssh-keygen
 # Enter file in which to save the key (C:\Users\<user>/.ssh/id_rsa): 
 vm_rsa
@@ -53,7 +53,7 @@ geonode
 ```
 
 connect via ssh
-```shell
+```console
 ssh gn
 ```
 > Now we can work on the VM via ssh. Start VM in headless mode and connect in VSC-Remote_Explorer or in a terminal use <br>
@@ -77,41 +77,59 @@ echo "conda activate nfdi4bio" >>~/.bashrc
 conda activate nfdi4bio
 ```
 ## Install git
-```
+```console
 sudo apt-get install git
 ```
 ## Install docker
-```
+```console
 sudo snap install docker
 ```
-## Download Repo
-```
+# 5. Setup Files
+## Clone Repos
+```console
 git clone https://github.com/Geonode-SEP-NFDI4Biodiversity/geonode ~/repositories/geonode
+git clone git+https://github.com/Geonode-SEP-NFDI4Biodiversity/docker-compose-setup.git ~/repositories/docker-compose-setup
+```
+## Copy Files And Make Executable
+```console
 cd ~/repositories/geonode
+cp ../docker-compose-setup/.env_nfdi4bio .
+cp ../docker-compose-setup/docker-compose-nfdi4bio.yml .
+cp ../docker-compose-setup/docker-compose-nfdi4bio.sh .
+sudo chmod +x docker-compose-nfdi4bio.sh
 ```
-## Download Other Files
-Download files [here](https://github.com/Geonode-SEP-NFDI4Biodiversity/docker-compose-setup/find/main
-) into `~/repositories/geonode`
+### Stop Tracking
+```console
+printf "\n.env_nfdi4bio" >> .git/info/exclude
+printf "\ndocker-compose-nfdi4bio.yml" >> .git/info/exclude
+printf "\ndocker-compose-nfdi4bio.sh" >> .git/info/exclude
+```
 ## Switch Branch
-```
+```console
 git switch nfdi4bio_development
 ```
-## Setup Docker
-### Give Rights To User
+
+# 6. Setup Docker
+## Give Rights To User
 ```console
 sudo groupadd docker
 sudo usermod -aG docker $USER
 su $USER
 ```
-### Build
+## Build
 ```console
-docker build -t geonode_dev .
-sudo service apache2 stop
-docker compose up -d
+dotenv --dotenv .env_nfdi4bio docker build -t geonode_dev .
 ```
-
-# 5. Test
-## Give Rights to users
+> When making changes to python files, you have to reload WSGI server:
+> ```console
+> ./docker-compose-nfdi4bio.sh exec django touch /usr/src/geonode/geonode/wsgi.py
+> ```
+## Start
+```console
+sudo service apache2 stop
+dotenv --dotenv .env_nfdi4bio docker compose -f docker-compose-nfdi4bio.yml "$@"
+```
+## Give DB Rights To Users
 attach geonode/postgis to shell (I used vsc)
 ```
 psql -U postgres
@@ -120,13 +138,29 @@ ALTER USER geonode Superuser;
 ALTER USER geonode_data Superuser;
 ```
 
+# 7. Test
 ## Execute Tests
+```console
+./docker-compose-nfdi4bio.sh exec django manage.py test --failfast
+```
 docker compose exec django manage.py test --failfast
 
-
-## pycsw
-### Upgrade 
-`pip install git+https://github.com/geopython/pycsw.git`
-
-### Downgrade
-`pip install pycsw==2.6.1`
+# 8. Debug
+1. Attached the container to VSC
+2. Installed the python debugger extension on new VSC window, then reload window
+3. Created the launch json with:
+```console
+{
+            "name": "Test",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "test", "geonode.catalogue", "--failfast"
+            ]
+}
+```
+4. Set Breakpoints
+5. Run & Debug Test

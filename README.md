@@ -157,9 +157,9 @@ ALTER USER geonode_data Superuser;
 [^](#contents) 
 <a name="debug"></a>
 # Debug
-1. Attached the container to VSC
-2. Installed the python debugger extension on new VSC window, then reload window
-3. Created the launch json with:
+1. Attach the container to VSC
+2. Install the python debugger extension on new VSC window, then reload window
+3. Create a launch json with e.g.:
 ```console
 {
             "name": "Test",

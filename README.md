@@ -8,7 +8,6 @@ Oracle's VirtualBox is needed.<sub><sup>This is not 100% complete and could miss
 * [Debug](#debug)
 
 
-[^](#contents) 
 <a name="setup"></a>
 # Setup 
 ## 1. Setup VM

@@ -19,8 +19,11 @@ In the VM window:
     4. Restart
 
 In the terminal:
-* update os with `sudo apt update && sudo apt upgrade`
-* sudo apt install openssh-server -y
+update os with 
+```console
+sudo apt update && sudo apt upgrade
+sudo apt install openssh-server -y
+```
 
 ## 2. Open Ports
 To be able to access the webpage outside the VM we need to open port 8080. To work headless on the VM we need to open port 3022.
